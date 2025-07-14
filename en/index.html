@@ -80,6 +80,7 @@
 }
     body {
   font-family:Inter,Roboto,sans-serif;
+  font-size: 18px;
       background-color: #32323C;
       margin: 0;
       padding: 2rem;
@@ -103,7 +104,7 @@
     label {
       display: block;
       margin-top: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
       font-weight: bold;
     }
     .slider-container {
@@ -115,7 +116,7 @@
     }
     #sliderValue {
       position: absolute;
-      top: -10px;
+      top: -18px;
       background: #127eac;
       color: white;
       padding: 2px 8px;
@@ -151,13 +152,13 @@
       cursor: pointer;
     }
     .output {
-      margin-top: 1rem;
+      margin-top: 3rem;
       font-size: 1.25rem;
       font-weight: bold;
       color: white;
     }
     .output span {
-      color: #127eac;
+      color: #fdc300;
     }
     .footnote {
       font-size: 0.9rem;
@@ -165,13 +166,33 @@
       color: #777;
     }
     .sales-message {
-      margin-top: 1rem;
+      margin-top: 3rem;
       padding: 1rem;
-      background-color: #ffefc1;
-      color: #8a6d00;
-      border: 1px solid #f1d16b;
-      border-radius: 5px;
+      background-color: #127eac;
+      color: white;
     }
+ul {
+  text-align: left;
+  font-size: 1.0rem;
+}
+ul li {
+  margin-top: 1rem;
+  list-style-type: none;
+  position: relative;
+  padding-left: 1.75em;
+  --stack-gap: 1.25em;
+}
+ul li::before {
+  content: url(assets/triangle-right.svg);
+  transform: scale(1.8);
+  transform-origin: left;
+}
+ul li::before, ol li::before {
+  position: absolute;
+  left: 0;
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-light);
+}
   </style>
 </head>
 <body>
@@ -181,25 +202,28 @@
       <div id="sliderValue">30</div>
       <input type="range" id="machineRange" min="10" max="101" value="30" />
     </div>
-    <div class="output">
+    <div id="output" class="output">
       Price per machine per day: <span id="price">...</span>*
     </div>
     <div id="salesMessage" class="sales-message" style="display: none;">
-      Please contact our sales team to get an individual offer.
+      <p>Please contact our sales team to get an individual offer.</p>
+      <ul><li><strong>Phone: +49 241 93681-500</strong></li><li><strong>Email: contact@procom-automation.de</strong></li></ul>
     </div>
-    <div class="footnote">
-      * Indicative price. Based on 24 months contract term. Subject to change.
+    <div id="footnote" class="footnote">
+      * Indicative price, based on 24 months contract term.
     </div>
   </div>
 
   <script>
     const slider = document.getElementById('machineRange');
     const priceDisplay = document.getElementById('price');
+    const output = document.getElementById('output');
+    const footnote = document.getElementById('footnote');
     const salesMessage = document.getElementById('salesMessage');
     const sliderValue = document.getElementById('sliderValue');
 
     function calculatePrice(n) {
-      const result = (2180 + (330 + 45 * n) * 24) / (n * 730);
+      const result = (2180 + (330 + 45 * n) * 24) / (n * 365 * 2);
       return result.toFixed(2);
     }
     
@@ -217,9 +241,13 @@
 
       if (n === 101) {
         salesMessage.style.display = 'block';
+        output.style.display = 'none';
+        footnote.style.display = 'none';
         priceDisplay.textContent = '-';
       } else {
         salesMessage.style.display = 'none';
+        output.style.display = 'block';
+        footnote.style.display = 'block';
         priceDisplay.textContent = calculatePrice(n) + ' €';
       }
     }

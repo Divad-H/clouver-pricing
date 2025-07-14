@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clouver Kostenabschätzung</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family:"Inter";
+      font-style:normal;
+      font-weight:400;
+      font-display:swap;
+      src:url("./assets/inter-400-regular.woff2") format("woff2");
+      unicode-range:U+0000-00FF,
+      U+0131,
+      U+0152-0153,
+      U+02BB-02BC,
+      U+02C6,
+      U+02DA,
+      U+02DC,
+      U+2000-206F,
+      U+2074,
+      U+20AC,
+      U+2122,
+      U+2191,
+      U+2193,
+      U+2212,
+      U+2215,
+      U+FEFF,
+      U+FFFD
+    }
+    @font-face {
+      font-family:"Inter";
+      font-style:italic;
+      font-weight:400;
+      font-display:swap;
+      src:url("./assets/inter-400-italic.woff2") format("woff2");
+      unicode-range:U+0000-00FF,
+      U+0131,
+      U+0152-0153,
+      U+02BB-02BC,
+      U+02C6,
+      U+02DA,
+      U+02DC,
+      U+2000-206F,
+      U+2074,
+      U+20AC,
+      U+2122,
+      U+2191,
+      U+2193,
+      U+2212,
+      U+2215,
+      U+FEFF,
+      U+FFFD
+    }
+    @font-face {
+      font-family:"Inter";
+      font-style:normal;
+      font-weight:700;
+      font-display:swap;
+      src:url("./assets/inter-700-bold.woff2") format("woff2");
+      unicode-range:U+0000-00FF,
+      U+0131,
+      U+0152-0153,
+      U+02BB-02BC,
+      U+02C6,
+      U+02DA,
+      U+02DC,
+      U+2000-206F,
+      U+2074,
+      U+20AC,
+      U+2122,
+      U+2191,
+      U+2193,
+      U+2212,
+      U+2215,
+      U+FEFF,
+      U+FFFD
+    }
+    body {
+      font-family:Inter,Roboto,sans-serif;
+      font-size: 18px;
+      background-color: #32323C;
+      margin: 0;
+      padding: 2rem;
+      color: white;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 600px;
+      background: #23232A;
+      width: 100%;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #127eac;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 2.5rem;
+      font-weight: bold;
+    }
+    .slider-container {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #sliderValue {
+      position: absolute;
+      top: -18px;
+      background: #127eac;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      transform: translateX(-50%);
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      margin-top: 20px;
+      height: 6px;
+      background: linear-gradient(to right, #127eac 0%, #127eac var(--range-progress), white var(--range-progress), white 100%);
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border: 2px solid #127eac;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: white;
+      border: 2px solid #127eac;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 3rem;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: white;
+    }
+    .output span {
+      color: #fdc300;
+    }
+    .footnote {
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      color: #777;
+    }
+    .sales-message {
+      margin-top: 3rem;
+      padding: 1rem;
+      background-color: #127eac;
+      color: white;
+    }
+    ul {
+      text-align: left;
+      font-size: 1.0rem;
+    }
+    ul li {
+      margin-top: 1rem;
+      list-style-type: none;
+      position: relative;
+      padding-left: 1.75em;
+      --stack-gap: 1.25em;
+    }
+    ul li::before {
+      content: url(assets/triangle-right.svg);
+      transform: scale(1.8);
+      transform-origin: left;
+    }
+    ul li::before, ol li::before {
+      position: absolute;
+      left: 0;
+      font-weight: var(--font-weight-bold);
+      color: var(--primary-light);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="machineRange">Wie viele Maschinen sollen verbunden werden?</label>
+    <div class="slider-container">
+      <div id="sliderValue">30</div>
+      <input type="range" id="machineRange" min="10" max="101" value="30" />
+    </div>
+    <div id="output" class="output">
+      Preis pro Maschine und Tag: <span id="price">...</span>*
+    </div>
+    <div id="salesMessage" class="sales-message" style="display: none;">
+      <p>Wir machen Ihnen gerne ein individuelles Angebot.</p>
+      <ul><li><strong>Telefon: +49 241 93681-500</strong></li><li><strong>E-Mail: contact@procom-automation.de</strong></li></ul>
+    </div>
+    <div id="footnote" class="footnote">
+      * Indikativer Preis, basierend auf 24 Montaten Vertragslaufzeuit.
+    </div>
+  </div>
+
+  <script>
+    const slider = document.getElementById('machineRange');
+    const priceDisplay = document.getElementById('price');
+    const output = document.getElementById('output');
+    const footnote = document.getElementById('footnote');
+    const salesMessage = document.getElementById('salesMessage');
+    const sliderValue = document.getElementById('sliderValue');
+
+    function calculatePrice(n) {
+      const result = (2180 + (330 + 45 * n) * 24) / (n * 365 * 2);
+      return result.toFixed(2);
+    }
+    
+    function updateSliderBackground(value, min, max) {
+      const percentage = ((value - min) / (max - min)) * 100;
+      slider.style.setProperty('--range-progress', percentage + '%');
+    }
+
+    function updateUI() {
+      const n = parseInt(slider.value, 10);
+      sliderValue.textContent = n == 101 ? '100+' : n;
+      const percent = ((n - 10) / (91)) * 100;
+      sliderValue.style.left = `calc(${percent}% + ${12 - 0.22 * percent}px)`;
+      updateSliderBackground(n, 10, 101);
+
+      if (n === 101) {
+        salesMessage.style.display = 'block';
+        output.style.display = 'none';
+        footnote.style.display = 'none';
+        priceDisplay.textContent = '-';
+      } else {
+        salesMessage.style.display = 'none';
+        output.style.display = 'block';
+        footnote.style.display = 'block';
+        priceDisplay.textContent = calculatePrice(n) + ' €';
+      }
+    }
+
+    slider.addEventListener('input', updateUI);
+    updateUI();
+  </script>
+</body>
+</html>
